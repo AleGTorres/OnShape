@@ -1,4 +1,4 @@
-package com.example.onshape.ui.home;
+package com.example.onshape.ui.login;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

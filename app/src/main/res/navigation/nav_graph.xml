@@ -9,24 +9,58 @@
         android:id="@+id/loginFragment"
         android:name="com.example.onshape.ui.login.LoginFragment"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login" >
+        tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
             app:destination="@id/registerFragment" />
         <action
-            android:id="@+id/action_loginFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:popUpTo="@id/nav_graph"
-            app:popUpToInclusive="true"/>
+            android:id="@+id/action_loginFragment_to_routineListFragment"
+            app:destination="@id/routineListFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.example.onshape.ui.login.RegisterFragment"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" />
+
     <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.example.onshape.ui.home.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/routineListFragment"
+        android:name="com.example.onshape.ui.routine.RoutineListFragment"
+        android:label="Minhas Rotinas"
+        tools:layout="@layout/fragment_routine_list">
+        <action
+            android:id="@+id/action_routineListFragment_to_createRoutineFragment"
+            app:destination="@id/createRoutineFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.example.onshape.ui.history.HistoryFragment"
+        android:label="Histórico"
+        tools:layout="@layout/fragment_history" />
+
+    <fragment
+        android:id="@+id/progressFragment"
+        android:name="com.example.onshape.ui.progress.ProgressFragment"
+        android:label="Progresso"
+        tools:layout="@layout/fragment_progress" />
+
+    <fragment
+        android:id="@+id/createRoutineFragment"
+        android:name="com.example.onshape.ui.routine.CreateRoutineFragment"
+        android:label="Nova Rotina"
+        tools:layout="@layout/fragment_create_routine">
+        <action
+            android:id="@+id/action_createRoutineFragment_to_selectExerciseFragment"
+            app:destination="@id/selectExerciseFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/selectExerciseFragment"
+        android:name="com.example.onshape.ui.exercise.SelectExerciseFragment"
+        android:label="Adicionar Exercício"
+        tools:layout="@layout/fragment_select_exercise" />
+
 </navigation>
