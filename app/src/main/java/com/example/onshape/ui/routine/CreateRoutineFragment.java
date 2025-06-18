@@ -91,9 +91,13 @@ public class CreateRoutineFragment extends Fragment {
         if (currentRoutineId == -1) {
             Routine newRoutine = new Routine(routineName, userId);
             routineViewModel.insertRoutine(newRoutine, id -> {
-                currentRoutineId = id;
-                observeExercises();
-                navigateToSelectExercise(view);
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        currentRoutineId = id;
+                        observeExercises();
+                        navigateToSelectExercise(view);
+                    });
+                }
             });
         } else {
             navigateToSelectExercise(view);

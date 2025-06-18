@@ -62,8 +62,13 @@ public class LoginFragment extends Fragment {
 
             getActivity().runOnUiThread(() -> {
                 if (user != null && user.passwordHash.equals(passwordHash)) {
+
+                    android.content.SharedPreferences prefs = requireActivity().getSharedPreferences("OnShape_prefs", android.content.Context.MODE_PRIVATE);
+                    prefs.edit().putInt("LOGGED_IN_USER_ID", user.id).apply();
+
                     Toast.makeText(getContext(), "Login bem-sucedido!", Toast.LENGTH_SHORT).show();
-                    Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_routineListFragment);                } else {
+                    Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_routineListFragment);
+                } else {
                     Toast.makeText(getContext(), "Usuário ou senha inválidos", Toast.LENGTH_SHORT).show();
                 }
             });
