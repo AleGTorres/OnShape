@@ -14,6 +14,7 @@ import java.util.List;
 public class RoutineAdapter extends RecyclerView.Adapter<RoutineAdapter.RoutineViewHolder> {
     private List<Routine> routines;
     public interface OnRoutineInteractionListener {
+        void onRoutineClick(Routine routine);
         void onStartRoutine(Routine routine);
     }
     private OnRoutineInteractionListener listener;
@@ -34,11 +35,8 @@ public class RoutineAdapter extends RecyclerView.Adapter<RoutineAdapter.RoutineV
     public void onBindViewHolder(@NonNull RoutineViewHolder holder, int position) {
         Routine currentRoutine = routines.get(position);
         holder.textViewRoutineName.setText(currentRoutine.name);
-        holder.startButton.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onStartRoutine(currentRoutine);
-            }
-        });
+        holder.itemView.setOnClickListener(v -> listener.onRoutineClick(currentRoutine));
+        holder.startButton.setOnClickListener(v -> listener.onStartRoutine(currentRoutine));
     }
 
     @Override

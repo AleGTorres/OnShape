@@ -33,14 +33,18 @@
         <action
             android:id="@+id/action_routineListFragment_to_createRoutineFragment"
             app:destination="@id/createRoutineFragment" />
+        <action
+            android:id="@+id/action_routineListFragment_to_routineDetailFragment"
+            app:destination="@id/routineDetailFragment" />
+        <action
+            android:id="@+id/action_routineListFragment_to_activeWorkoutFragment"
+            app:destination="@id/activeWorkoutFragment" />
     </fragment>
-
     <fragment
         android:id="@+id/historyFragment"
         android:name="com.example.onshape.ui.history.HistoryFragment"
         android:label="Histórico"
         tools:layout="@layout/fragment_history" />
-
     <fragment
         android:id="@+id/progressFragment"
         android:name="com.example.onshape.ui.progress.ProgressFragment"
@@ -56,11 +60,31 @@
             android:id="@+id/action_createRoutineFragment_to_selectExerciseFragment"
             app:destination="@id/selectExerciseFragment" />
     </fragment>
-
     <fragment
         android:id="@+id/selectExerciseFragment"
         android:name="com.example.onshape.ui.exercise.SelectExerciseFragment"
         android:label="Adicionar Exercício"
         tools:layout="@layout/fragment_select_exercise" />
+    <fragment
+        android:id="@+id/routineDetailFragment"
+        android:name="com.example.onshape.ui.routine.RoutineDetailFragment"
+        android:label="Detalhes da Rotina"
+        tools:layout="@layout/fragment_routine_detail">
+        <argument
+            android:name="routine"
+            app:argType="com.example.onshape.data.Routine" />
+        <action
+            android:id="@+id/action_routineDetailFragment_to_activeWorkoutFragment"
+            app:destination="@id/activeWorkoutFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/activeWorkoutFragment"
+        android:name="com.example.onshape.ui.workout.ActiveWorkoutFragment"
+        android:label="Treino Ativo"
+        tools:layout="@layout/fragment_active_workout">
+        <argument
+            android:name="routine"
+            app:argType="com.example.onshape.data.Routine" />
+    </fragment>
 
 </navigation>

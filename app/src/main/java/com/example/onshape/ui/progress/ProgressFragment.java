@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.onshape.R;
@@ -19,9 +20,13 @@ import com.example.onshape.data.SessionExercise;
 import com.example.onshape.ui.history.HistoryViewModel;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,6 +60,9 @@ public class ProgressFragment extends Fragment {
 
     private void setupSpinner() {
         historyViewModel.getUniqueExerciseNames(userId).observe(getViewLifecycleOwner(), exerciseNames -> {
+            if (exerciseNames != null && !exerciseNames.isEmpty()) {
+                exerciseNames.add(0, "Selecione um exercício...");
+            }
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, exerciseNames);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             exerciseSpinner.setAdapter(adapter);
@@ -63,6 +71,11 @@ public class ProgressFragment extends Fragment {
         exerciseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    lineChart.clear();
+                    lineChart.invalidate();
+                    return;
+                }
                 String selectedExercise = (String) parent.getItemAtPosition(position);
                 updateChartWithExerciseData(selectedExercise);
             }
@@ -84,10 +97,15 @@ public class ProgressFragment extends Fragment {
                 }
 
                 LineDataSet dataSet = new LineDataSet(entries, "Evolução de Carga (kg)");
-                dataSet.setColor(Color.BLUE);
-                dataSet.setValueTextColor(Color.BLACK);
-                dataSet.setCircleColor(Color.BLUE);
-                dataSet.setLineWidth(2f);
+
+                int purpleColor = ContextCompat.getColor(getContext(), R.color.purple_primary);
+                dataSet.setColor(purpleColor);
+                dataSet.setCircleColor(purpleColor);
+                dataSet.setCircleHoleColor(purpleColor);
+                dataSet.setValueTextColor(Color.WHITE);
+                dataSet.setLineWidth(2.5f);
+                dataSet.setCircleRadius(5f);
+                dataSet.setValueTextSize(10f);
 
                 LineData lineData = new LineData(dataSet);
                 lineChart.setData(lineData);
@@ -100,8 +118,23 @@ public class ProgressFragment extends Fragment {
 
     private void setupChartStyle() {
         lineChart.getDescription().setEnabled(false);
-        lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        lineChart.getAxisRight().setEnabled(false);
         lineChart.setNoDataText("Selecione um exercício para ver o progresso.");
+        lineChart.setNoDataTextColor(Color.WHITE);
+
+        XAxis xAxis = lineChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setTextColor(Color.WHITE);
+        xAxis.setDrawGridLines(false);
+        xAxis.setAxisLineColor(Color.GRAY);
+
+        YAxis yAxisLeft = lineChart.getAxisLeft();
+        yAxisLeft.setTextColor(Color.WHITE);
+        yAxisLeft.setAxisLineColor(Color.GRAY);
+        yAxisLeft.setGridColor(Color.parseColor("#40FFFFFF"));
+
+        lineChart.getAxisRight().setEnabled(false);
+
+        Legend legend = lineChart.getLegend();
+        legend.setTextColor(Color.WHITE);
     }
 }

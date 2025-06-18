@@ -1,6 +1,7 @@
 package com.example.onshape;
 
 import android.os.Bundle;
+import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -19,8 +20,15 @@ public class MainActivity extends AppCompatActivity {
                 .findFragmentById(R.id.nav_host_fragment);
         NavController navController = navHostFragment.getNavController();
 
-        NavigationUI.setupWithNavController(bottomNav, navController);
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            if (destination.getId() == R.id.loginFragment || destination.getId() == R.id.registerFragment) {
+                bottomNav.setVisibility(View.GONE);
+            } else {
+                bottomNav.setVisibility(View.VISIBLE);
+            }
+        });
 
+        NavigationUI.setupWithNavController(bottomNav, navController);
         NotificationHelper.createNotificationChannel(this);
     }
 }

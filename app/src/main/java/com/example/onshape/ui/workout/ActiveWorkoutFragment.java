@@ -93,10 +93,14 @@ public class ActiveWorkoutFragment extends Fragment {
                 );
                 historyViewModel.insertSessionExercise(sessionExercise);
             }
-            NotificationHelper.showWorkoutCompletedNotification(getContext(), currentRoutine.name);
 
-            Toast.makeText(getContext(), "Treino salvo no histórico!", Toast.LENGTH_LONG).show();
-            Navigation.findNavController(view).popBackStack();
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(() -> {
+                    NotificationHelper.showWorkoutCompletedNotification(getContext(), currentRoutine.name);
+                    Toast.makeText(getContext(), "Treino salvo no histórico!", Toast.LENGTH_LONG).show();
+                    Navigation.findNavController(view).popBackStack();
+                });
+            }
         });
     }
 }

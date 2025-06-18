@@ -2,7 +2,7 @@ package com.example.onshape.data;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
-import androidx.room.Index; // Importe a classe Index
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "workout_exercises",

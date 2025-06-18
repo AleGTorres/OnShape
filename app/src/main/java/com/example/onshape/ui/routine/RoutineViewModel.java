@@ -40,4 +40,8 @@ public class RoutineViewModel extends AndroidViewModel {
     public LiveData<List<ExerciseLibrary>> searchExercisesByName(String query) {
         return repository.searchExercisesByName(query);
     }
+
+    public void deleteRoutine(Routine routine) {
+        repository.deleteRoutine(routine);
+    }
 }

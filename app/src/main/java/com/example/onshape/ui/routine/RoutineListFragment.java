@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast; // Importe a classe Toast
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -16,8 +16,13 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.onshape.R;
-import com.example.onshape.data.Routine; // Importe a classe Routine
+import com.example.onshape.data.Routine;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import androidx.core.view.MenuProvider;
+import androidx.lifecycle.Lifecycle;
 
 import java.util.ArrayList;
 
@@ -40,6 +45,22 @@ public class RoutineListFragment extends Fragment implements RoutineAdapter.OnRo
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_routine_list, container, false);
+
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.main_menu, menu);
+            }
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                if (menuItem.getItemId() == R.id.action_logout) {
+                    logout();
+                    return true;
+                }
+                return false;
+            }
+        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
 
         recyclerView = view.findViewById(R.id.recycler_view_routines);
         emptyView = view.findViewById(R.id.empty_view);
@@ -71,8 +92,24 @@ public class RoutineListFragment extends Fragment implements RoutineAdapter.OnRo
         return view;
     }
 
+    private void logout() {
+        SharedPreferences prefs = requireActivity().getSharedPreferences("OnShape_prefs", Context.MODE_PRIVATE);
+        prefs.edit().remove("LOGGED_IN_USER_ID").apply();
+
+        Navigation.findNavController(requireView()).navigate(R.id.loginFragment);
+    }
+
+    @Override
+    public void onRoutineClick(Routine routine) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("routine", routine);
+        Navigation.findNavController(requireView()).navigate(R.id.action_routineListFragment_to_routineDetailFragment, bundle);
+    }
+
     @Override
     public void onStartRoutine(Routine routine) {
-        Toast.makeText(getContext(), "Iniciando: " + routine.name, Toast.LENGTH_SHORT).show();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("routine", routine);
+        Navigation.findNavController(requireView()).navigate(R.id.action_routineListFragment_to_activeWorkoutFragment, bundle);
     }
 }

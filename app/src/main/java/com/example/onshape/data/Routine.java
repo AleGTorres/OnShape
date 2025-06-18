@@ -2,8 +2,9 @@ package com.example.onshape.data;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
-import androidx.room.Index; // Importe a classe Index
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
+import java.io.Serializable;
 
 @Entity(tableName = "routines",
         foreignKeys = @ForeignKey(entity = User.class,
@@ -11,7 +12,7 @@ import androidx.room.PrimaryKey;
                 childColumns = "userId",
                 onDelete = ForeignKey.CASCADE),
         indices = {@Index(value = {"userId"})})
-public class Routine {
+public class Routine implements Serializable {
     @PrimaryKey(autoGenerate = true)
     public int id;
     public String name;

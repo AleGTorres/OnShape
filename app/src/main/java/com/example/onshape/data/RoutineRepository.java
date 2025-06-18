@@ -48,4 +48,8 @@ public class RoutineRepository {
     public LiveData<List<ExerciseLibrary>> searchExercisesByName(String query) {
         return exerciseLibraryDao.searchExercisesByName(query);
     }
+
+    public void deleteRoutine(Routine routine) {
+        AppDatabase.databaseWriteExecutor.execute(() -> routineDao.delete(routine));
+    }
 }

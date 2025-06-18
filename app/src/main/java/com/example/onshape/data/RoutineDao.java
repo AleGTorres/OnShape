@@ -2,6 +2,7 @@ package com.example.onshape.data;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -21,4 +22,7 @@ public interface RoutineDao {
 
     @Query("SELECT * FROM workout_exercises WHERE routineId = :routineId")
     LiveData<List<WorkoutExercise>> getExercisesForRoutine(int routineId);
+
+    @Delete
+    void delete(Routine routine);
 }
