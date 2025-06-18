@@ -13,11 +13,13 @@ public class ExerciseLibrary implements Serializable {
     public String muscle;
     public String equipment;
     public String instructions;
+    public String imageName;
 
-    public ExerciseLibrary(String name, String muscle, String equipment, String instructions) {
+    public ExerciseLibrary(String name, String muscle, String equipment, String instructions, String imageName) {
         this.name = name;
         this.muscle = muscle;
         this.equipment = equipment;
         this.instructions = instructions;
+        this.imageName = imageName;
     }
 }

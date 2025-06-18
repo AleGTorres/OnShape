@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,21 +28,24 @@ public class CreateRoutineFragment extends Fragment {
 
     private RoutineViewModel routineViewModel;
     private EditText routineNameEditText;
-    private long currentRoutineId = -1;
     private WorkoutExerciseAdapter adapter;
+    private final MutableLiveData<Long> currentRoutineIdLiveData = new MutableLiveData<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         getParentFragmentManager().setFragmentResultListener("requestKey", this, (requestKey, bundle) -> {
+            Long currentId = currentRoutineIdLiveData.getValue();
+            if (currentId == null || currentId == -1) return;
+
             ExerciseLibrary selectedExercise = (ExerciseLibrary) bundle.getSerializable("selectedExercise");
             int sets = bundle.getInt("sets");
             int reps = bundle.getInt("reps");
 
-            if (selectedExercise != null && currentRoutineId != -1) {
+            if (selectedExercise != null) {
                 WorkoutExercise workoutExercise = new WorkoutExercise(
-                        (int) currentRoutineId,
+                        currentId.intValue(),
                         selectedExercise.name,
                         selectedExercise.muscle,
                         sets,
@@ -70,6 +74,14 @@ public class CreateRoutineFragment extends Fragment {
         addExerciseButton.setOnClickListener(v -> handleAddExercise(v));
         saveRoutineButton.setOnClickListener(v -> saveRoutineAndExit(v));
 
+        currentRoutineIdLiveData.observe(getViewLifecycleOwner(), routineId -> {
+            if (routineId != null && routineId != -1) {
+                routineViewModel.getExercisesForRoutine(routineId.intValue()).observe(getViewLifecycleOwner(), workoutExercises -> {
+                    adapter.setExercises(workoutExercises);
+                });
+            }
+        });
+
         return view;
     }
 
@@ -80,24 +92,20 @@ public class CreateRoutineFragment extends Fragment {
             return;
         }
 
-        SharedPreferences prefs = requireActivity().getSharedPreferences("OnShape_prefs", Context.MODE_PRIVATE);
-        int userId = prefs.getInt("LOGGED_IN_USER_ID", -1);
+        Long currentId = currentRoutineIdLiveData.getValue();
 
-        if (userId == -1) {
-            Toast.makeText(getContext(), "Erro: Usuário não identificado. Por favor, faça login novamente.", Toast.LENGTH_LONG).show();
-            return;
-        }
+        if (currentId == null || currentId == -1) {
+            SharedPreferences prefs = requireActivity().getSharedPreferences("OnShape_prefs", Context.MODE_PRIVATE);
+            int userId = prefs.getInt("LOGGED_IN_USER_ID", -1);
+            if (userId == -1) {
+                Toast.makeText(getContext(), "Erro: Usuário não identificado.", Toast.LENGTH_LONG).show();
+                return;
+            }
 
-        if (currentRoutineId == -1) {
             Routine newRoutine = new Routine(routineName, userId);
             routineViewModel.insertRoutine(newRoutine, id -> {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        currentRoutineId = id;
-                        observeExercises();
-                        navigateToSelectExercise(view);
-                    });
-                }
+                currentRoutineIdLiveData.postValue(id);
+                navigateToSelectExercise(view);
             });
         } else {
             navigateToSelectExercise(view);
@@ -108,17 +116,10 @@ public class CreateRoutineFragment extends Fragment {
         Navigation.findNavController(view).navigate(R.id.action_createRoutineFragment_to_selectExerciseFragment);
     }
 
-    private void observeExercises() {
-        if (currentRoutineId != -1) {
-            routineViewModel.getExercisesForRoutine((int) currentRoutineId).observe(getViewLifecycleOwner(), workoutExercises -> {
-                adapter.setExercises(workoutExercises);
-            });
-        }
-    }
-
     private void saveRoutineAndExit(View view) {
-        if (currentRoutineId == -1 && TextUtils.isEmpty(routineNameEditText.getText().toString().trim())) {
-            Toast.makeText(getContext(), "Crie uma rotina e adicione exercícios antes de salvar.", Toast.LENGTH_SHORT).show();
+        Long currentId = currentRoutineIdLiveData.getValue();
+        if (currentId == null || currentId == -1) {
+            Toast.makeText(getContext(), "Adicione pelo menos um exercício antes de salvar.", Toast.LENGTH_SHORT).show();
             return;
         }
         Toast.makeText(getContext(), "Rotina salva com sucesso!", Toast.LENGTH_SHORT).show();

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {User.class, Routine.class, WorkoutExercise.class, ExerciseLibrary.class, WorkoutSession.class, SessionExercise.class}, version = 4, exportSchema = false)
+@Database(entities = {User.class, Routine.class, WorkoutExercise.class, ExerciseLibrary.class, WorkoutSession.class, SessionExercise.class}, version = 5, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract UserDao userDao();

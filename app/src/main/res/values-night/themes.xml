@@ -1,7 +1,16 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.OnShape" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    <style name="Base.Theme.OnShape" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/purple_primary</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorSecondary">@color/purple_accent</item>
+        <item name="colorOnSecondary">@color/black</item>
+
+        <item name="android:colorBackground">@color/dark_purple_background</item>
+        <item name="colorSurface">@color/dark_purple_surface</item>
+        <item name="colorOnSurface">@color/text_primary_dark</item>
+
+        <item name="android:statusBarColor">@color/dark_purple_background</item>
     </style>
+
+    <style name="Theme.OnShape" parent="Base.Theme.OnShape" />
 </resources>

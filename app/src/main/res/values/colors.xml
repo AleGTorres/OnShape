@@ -2,4 +2,11 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="dark_purple_background">#1C1B22</color>
+    <color name="dark_purple_surface">#2A2833</color>
+    <color name="purple_primary">#BB86FC</color>
+    <color name="purple_accent">#A159FF</color>
+    <color name="text_primary_dark">#F2F2F2</color>
+    <color name="text_secondary_dark">#A0A0A0</color>
 </resources>

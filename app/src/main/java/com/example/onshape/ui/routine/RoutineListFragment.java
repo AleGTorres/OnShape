@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast; // Importe a classe Toast
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,6 +27,7 @@ public class RoutineListFragment extends Fragment implements RoutineAdapter.OnRo
     private RecyclerView recyclerView;
     private RoutineAdapter adapter;
     private int userId;
+    private LinearLayout emptyView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class RoutineListFragment extends Fragment implements RoutineAdapter.OnRo
         View view = inflater.inflate(R.layout.fragment_routine_list, container, false);
 
         recyclerView = view.findViewById(R.id.recycler_view_routines);
+        emptyView = view.findViewById(R.id.empty_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         adapter = new RoutineAdapter(new ArrayList<>(), this);
@@ -54,6 +57,13 @@ public class RoutineListFragment extends Fragment implements RoutineAdapter.OnRo
 
         if (userId != -1) {
             routineViewModel.getUserRoutines(userId).observe(getViewLifecycleOwner(), routines -> {
+                if (routines == null || routines.isEmpty()) {
+                    recyclerView.setVisibility(View.GONE);
+                    emptyView.setVisibility(View.VISIBLE);
+                } else {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    emptyView.setVisibility(View.GONE);
+                }
                 adapter.setRoutines(routines);
             });
         }
